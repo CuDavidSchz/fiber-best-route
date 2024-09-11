@@ -1,0 +1,8 @@
+
+# Archivos ignorados
+
+.vscode
+
+# Carpetas ignoradas
+
+output/
