@@ -11,8 +11,8 @@ The **places** has this key fields:
 
 | place_name | mnode_dist | pop_density | num_houses | 
 
-**place_name** = The place name
-**mnode_dist** = The distance between the place and the node that is connecting to
-**pop_density** = The relation population / km^2 
-**num_houses** = The quantity of houses in that place
+- **place_name** = The place name
+- **mnode_dist** = The distance between the place and the node that is connecting to
+- **pop_density** = The relation population / km^2 
+- **num_houses** = The quantity of houses in that place
 
