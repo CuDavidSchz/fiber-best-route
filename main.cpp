@@ -1,11 +1,20 @@
-
 #include <iostream>
 
-using namespace std;
+#include "Menu.hpp"
 
-int main(){
+int main() {
+    Menu menu; 
+    int choice;
+    std::cout << "Si funciona" << std::endl;
 
-    std::cout << "Hello world" << std::endl;
+   do {
+        menu.display();
+        std::cin >> choice;
+        menu.processInput(choice);
+    } while (choice != 0);
+ 
 
 
-}
+    return 0;
+}  
+ 

@@ -7,3 +7,8 @@
 
 output/
 class-diagrams/
+main.sdYM/
+
+# Archivo ejecutable
+
+program

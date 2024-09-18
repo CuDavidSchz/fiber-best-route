@@ -38,3 +38,5 @@ class Place {
         void showInfo();
         
 };
+
+#endif
