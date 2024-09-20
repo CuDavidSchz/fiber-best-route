@@ -126,7 +126,8 @@ void Calculations::sortPlaces(vector<Place>& places)
     });
 
     // Display the list
-    for (const auto& place : places) {
+    for (const auto& place : places) 
+    {
         cout << place.getPlace_name() << " - PI: " << place.getProfit_Index()
              << ", Node Distance: " << place.getNode_distance()
              << ", NPD: " << place.getNear_Place_Dist() << " km" << endl;
