@@ -15,4 +15,6 @@ The **places** has this key fields:
 - **mnode_dist** = The distance between the place and the node that is connecting to
 - **pop_density** = The relation population / km^2 
 - **num_houses** = The quantity of houses in that place
+- **Ppl_p_house** = The number of people living in each hosue
 
+## How calculate the 
