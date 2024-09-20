@@ -224,7 +224,7 @@ void Place::setProfit_Index(float _Profit_Index)
 Additionals
 ----------------------------------------------------------------------------
 */
-void Place::showInfo()
+void Place::showInfo() const
 {
     cout << "Información del lugar:" << endl;
     cout << "Nombre: " << Place_name << endl;

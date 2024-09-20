@@ -39,13 +39,13 @@ class Calculations
         Calculates Profit_Index
         ----------------------------------------------------------------------------
     */
-        void calcPI(Place& place, int alphaOption, float CPK);
+        void calcPI(vector<Place>& places, int alphaOption, float CPK);
    
     /*
         Sorts Places by Neares_Place_Distance
         ----------------------------------------------------------------------------
     */
-        void sortPlacesByNPD(vector<Place>& places);
+        void sortPlaces(vector<Place>& places);
 
 
 
