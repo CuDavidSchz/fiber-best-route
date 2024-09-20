@@ -153,7 +153,7 @@ Las entradas principales del programa consisten en un vector de objetos Place, d
   #### Vector de ejemplo:
 
 | PN | ND |P | PPH | C | X 	| Y | 
-|--|--|--|--|--|--|--|--|
+|--|--|--|--|--|--|--|
 | Ciudad A | 10.0 | 5000 | 4 | 2 | 100.0 | 200.0	|
 | Ciudad B | 15.0 | 3000| 5 | 1 | 150.0 | 250.0 |
 | Ciudad C | 20.0 | 8000 | 3 | 0 | 200.0 | 250.0 |
@@ -166,10 +166,11 @@ Las entradas principales del programa consisten en un vector de objetos Place, d
 Finalmente se ordenan de acuerdo sortPlaces().
 
 | PN | PI |ND | NPD | 
-|--|--|--|--|--|--|--|--|
+|--|--|--|--|
 | Ciudad C | 5.59407 | 20.0 | 14.1421 |
 | Ciudad A | 0.859305 | 10.0| 14.1421 | 
 | Ciudad B | 0.62949 | 15.0 | 14.1421 |
+
 
 Dado el siguiente resultado tiene sentido basado en las reglas que se usaron en sortPlaces()
 
