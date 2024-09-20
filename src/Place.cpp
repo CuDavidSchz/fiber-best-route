@@ -196,7 +196,16 @@ void Place::setNear_Place_Dist(float _Near_Place_Dist)
 
 void Place::setProfit_Index(float _Profit_Index)
 {
-    this -> Profit_Index = _Profit_Index;
+    // Extra validation
+    if (_Profit_Index >= 0) 
+    {
+        this->Profit_Index = _Profit_Index;
+    } 
+    else 
+    {
+        cerr << "Error: El índice de rentabilidad no puede ser negativo. Se establece en 0 por defecto." << endl;
+        this->Profit_Index = 0;
+    }
 }
 
 /*
