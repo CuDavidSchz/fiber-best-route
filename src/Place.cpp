@@ -99,6 +99,11 @@ int Place::getNum_houses() const
     return Population / Ppl_p_house;
 }
 
+int Place::getCompetitors() const
+{
+    return this -> Competitors;
+}
+
 float Place::getX() const
 {
     
@@ -171,6 +176,13 @@ void Place::setPpl_p_house(int _Ppl_p_house)
         this->Ppl_p_house = 1; 
         cerr << "Error: Las personas por casa no pueden ser cero. Se establece en 1 por defecto." << endl;
     }
+}
+
+void Place::setCompetitors(int _Competitors)
+{
+
+    this -> Competitors = _Competitors;
+
 }
 
 void Place::setX(float _x)

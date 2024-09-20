@@ -56,6 +56,7 @@ class Place {
         int getPopulation() const;
         int getNum_houses() const;
         int getPpl_p_house() const;
+        int getCompetitors() const;
 
         float getX() const;
         float getY() const;
@@ -72,6 +73,7 @@ class Place {
         void setNode_distance(float);
         void setPopulation(int);
         void setPpl_p_house(int);
+        void setCompetitors(int);
 
         void setX(float);
         void setY(float);
@@ -83,7 +85,7 @@ class Place {
         Additionals
         ----------------------------------------------------------------------------
     */
-        void showInfo();
+        void showInfo() const;
         
 };
 

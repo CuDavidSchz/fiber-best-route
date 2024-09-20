@@ -2,82 +2,380 @@
 using namespace std;
 
 // Libraries
+#include <iostream>
+#include <limits>
 
 // Headers
-
 #include "../include/Menu.hpp"
+
 
 /*
     Constructor
     ---------------------------------------------------------------------
 */
-
-Menu::Menu() {}
-
-/*
-    Show Menu
-    ---------------------------------------------------------------------
-*/
-
-void Menu::display() 
+Menu::Menu() 
 {
-    std::cout << "1. Opción 1" << std::endl;
-    std::cout << "2. Opción 2" << std::endl;
-    std::cout << "3. Opción 3" << std::endl;
-    std::cout << "Seleccione una opción: ";
+    initializeExamplePlaces();
 }
+
 /*
-    Process the user selection
+    Shows menu options
     ---------------------------------------------------------------------
 */
+void Menu::display() {
+    cout << "=========================" << endl;
+    cout << "        M E N Ú          " << endl;
+    cout << "=========================" << endl;
+    cout << "1. Crear una lista de lugares" << endl;
+    cout << "2. Crear mejor ruta de despliegue" << endl;
+    cout << "3. Modificar la lista personalizada" << endl;
+    cout << "4. Salir" << endl;
+    cout << "Seleccione una opción: ";
+}
 
+/*
+    Process user's input
+    ---------------------------------------------------------------------
+*/
 void Menu::processInput(int choice) 
 {
-    switch(choice) {
+    switch(choice) 
+    {
         case 1:
-            option1();
+            optionCreatePlaces();
             break;
         case 2:
-            option2();
+            optionBestDeployment();
             break;
         case 3:
-            option3();
+            optionModifyCustomPlaces();
+            break;
+        case 4:
+            cout << "Gracias por usar el programa. ¡Hasta luego!" << endl;
             break;
         default:
-            std::cout << "Opción inválida" << std::endl;
+            cout << "Opción inválida. Por favor, intente de nuevo." << endl;
     }
 }
 
 /*
-    O P T I O N S 
+    Option 1 : Create a custom place vector
     ---------------------------------------------------------------------
 */
-
-
-/*
-    Option 1
-    ---------------------------------------------------------------------
-*/
-
-void Menu::option1() 
+void Menu::optionCreatePlaces() 
 {
-    std::cout << "Has seleccionado la Opción 1." << std::endl;
+    cout << "=== Crear una lista de lugares ===" << endl;
+
+
+    char continueAdding = 's';
+
+
+    while (continueAdding == 's' || continueAdding == 'S') 
+    {
+        addPlace(customPlaces);
+        cout << "¿Desea agregar otro lugar? (s/n): ";
+        cin >> continueAdding;
+    }
 }
 
 /*
-    Option 2
+    Option 2 : Find the best route
     ---------------------------------------------------------------------
 */
-void Menu::option2() 
+void Menu::optionBestDeployment() 
 {
-    std::cout << "Has seleccionado la Opción 2." << std::endl;
+    cout << "=== Crear mejor ruta de despliegue ===" << endl;
+
+    // Preguntar al usuario qué lista desea usar
+    cout << "Seleccione la lista de lugares a utilizar:" << endl;
+    cout << "1. Lista personalizada" << endl;
+    cout << "2. Lista de ejemplo" << endl;
+    cout << "Seleccione una opción: ";
+
+    int listChoice;
+    cin >> listChoice;
+
+    vector<Place> selectedPlaces; //A copy to preserve the original data
+    if (listChoice == 1) 
+    {
+        if (customPlaces.empty()) 
+        {
+            cout << "La lista personalizada está vacía. Por favor, cree una lista primero." << endl;
+            return;
+        }
+        selectedPlaces = customPlaces;
+    } 
+    else if (listChoice == 2) 
+    {
+        selectedPlaces = examplePlaces;
+    } 
+    else 
+    {
+        cout << "Opción inválida. Regresando al menú principal." << endl;
+        return;
+    }
+
+    // Ask for a custom CPK
+    float CPK;
+    cout << "¿Desea proporcionar un Costo por Kilómetro (CPK) personalizado? (s/n): ";
+    
+    char cpkChoice;
+    cin >> cpkChoice;
+
+    if (cpkChoice == 's' || cpkChoice == 'S') 
+    {
+        cout << "Ingrese el Costo por Kilómetro (CPK): ";
+        while (!(cin >> CPK) || CPK <= 0) 
+        {
+            cout << "Entrada inválida. Ingrese un número positivo para el CPK: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    } 
+    else 
+    {
+        // Use a default CPK
+        CPK = 500.0f; 
+        cout << "Usando CPK predeterminado: " << CPK << endl;
+    }
+
+    // Perform the calculations
+    performCalculations(selectedPlaces);
+
+    // Ask for another iteration using other alpha
+    char continueAlpha = 's';
+    while (continueAlpha == 's' || continueAlpha == 'S') 
+    {
+    
+        int alphaOption;
+        cout << "Seleccione el valor de alpha:" << endl;
+        cout << "1. Alpha = 0.7" << endl;
+        cout << "2. Alpha = 0.3" << endl;
+        cout << "Seleccione una opción: ";
+
+        while (!(cin >> alphaOption) || (alphaOption != 1 && alphaOption != 2)) 
+        {
+            cout << "Entrada inválida. Seleccione 1 o 2: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+
+        // Create a copy of the vector to work
+        vector<Place> placesCopy = selectedPlaces;
+
+        // Create Calculations object
+        Calculations calculations;
+
+        // Calculate PI
+        calculations.calcPI(placesCopy, alphaOption, CPK);
+
+        // Sort Places
+        calculations.sortPlaces(placesCopy);
+
+        // Show Results
+        cout << "=== Resultados de la ruta de despliegue ===" << endl;
+        displayPlaces(placesCopy);
+
+        // Ask for another iteration with another alpha
+        cout << "¿Desea probar con otro valor de alpha? (s/n): ";
+        cin >> continueAlpha;
+    }
 }
 
 /*
-    Option 3
+    Option 3 : Modify the custom vector
     ---------------------------------------------------------------------
 */
-void Menu::option3() 
+void Menu::optionModifyCustomPlaces() 
 {
-    std::cout << "Has seleccionado la Opción 3." << std::endl;
+    if (customPlaces.empty()) 
+    {
+        cout << "La lista personalizada está vacía. Por favor, cree una lista primero." << endl;
+        return;
+    }
+
+    bool continueModifying = true;
+
+    while (continueModifying) 
+    {
+        cout << "=== Modificar la lista personalizada ===" << endl;
+        cout << "1. Agregar un lugar" << endl;
+        cout << "2. Eliminar un lugar" << endl;
+        cout << "3. Mostrar lista de lugares" << endl;
+        cout << "4. Regresar al menú principal" << endl;
+        cout << "Seleccione una opción: ";
+        int modifyChoice;
+        cin >> modifyChoice;
+
+        switch(modifyChoice) 
+        {
+            case 1:
+                addPlace(customPlaces);
+                break;
+            case 2:
+                removePlace(customPlaces);
+                break;
+            case 3:
+                displayPlaces(customPlaces);
+                break;
+            case 4:
+                continueModifying = false;
+                break;
+            default:
+                cout << "Opción inválida. Por favor, intente de nuevo." << endl;
+        }
+    }
+}
+
+/*
+    AUXILIARY METHODS
+    ---------------------------------------------------------------------
+*/
+/*
+    Add another place
+    ---------------------------------------------------------------------
+*/
+void Menu::addPlace(vector<Place>& places) 
+{
+    cin.ignore();
+
+    // Variable bank
+    string name;
+    float nodeDistance;
+    int population;
+    int pplPerHouse;
+    int competitors;
+    float x, y;
+
+    cout << "Ingrese el nombre del lugar: ";
+    getline(cin, name);
+
+    cout << "Ingrese la distancia al nodo (km): ";
+    while (!(cin >> nodeDistance) || nodeDistance < 0) 
+    {
+        cout << "Entrada inválida. Ingrese un número no negativo para la distancia al nodo: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Ingrese la población: ";
+    while (!(cin >> population) || population < 0) 
+    {
+        cout << "Entrada inválida. Ingrese un número no negativo para la población: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Ingrese el número de personas por casa: ";
+    while (!(cin >> pplPerHouse) || pplPerHouse <= 0) 
+    {
+        cout << "Entrada inválida. Ingrese un número positivo para personas por casa: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Ingrese el número de competidores: ";
+    while (!(cin >> competitors) || competitors < 0) 
+    {
+        cout << "Entrada inválida. Ingrese un número no negativo para competidores: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Ingrese la coordenada X: ";
+    while (!(cin >> x)) 
+    {
+        cout << "Entrada inválida. Ingrese un número para la coordenada X: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Ingrese la coordenada Y: ";
+    while (!(cin >> y)) 
+    {
+        cout << "Entrada inválida. Ingrese un número para la coordenada Y: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    // Create and add the place
+    Place newPlace(name, nodeDistance, population, pplPerHouse, competitors, x, y);
+    places.push_back(newPlace);
+    cout << "Lugar agregado exitosamente." << endl;
+}
+
+/*
+    Show the places
+    ---------------------------------------------------------------------
+*/
+void Menu::displayPlaces(const vector<Place>& places) 
+{
+    if (places.empty()) 
+    {
+        cout << "La lista está vacía." << endl;
+        return;
+    }
+
+    for (const auto& place : places) 
+    {
+        place.showInfo();
+        cout << "-----------------------" << endl;
+    }
+}
+
+/*
+    Delete a place
+    ---------------------------------------------------------------------
+*/
+void Menu::removePlace(vector<Place>& places) 
+{
+    if (places.empty()) 
+    {
+        cout << "La lista está vacía." << endl;
+        return;
+    }
+
+    displayPlaces(places);
+
+    cout << "Ingrese el índice del lugar que desea eliminar (comenzando desde 1): ";
+    int index;
+    while (!(cin >> index) || index < 1 || index > places.size()) 
+    {
+        cout << "Entrada inválida. Ingrese un número entre 1 y " << places.size() << ": ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    // Delete the place
+    places.erase(places.begin() + (index - 1));
+    cout << "Lugar eliminado exitosamente." << endl;
+}
+
+/*
+    CALCULATIONS
+    ---------------------------------------------------------------------
+*/
+void Menu::performCalculations(vector<Place>& places) 
+{
+    Calculations calculations;
+
+    calculations.calcNPD(places);
+}
+
+/*
+    EXAMPLE LIST
+    ---------------------------------------------------------------------
+*/
+void Menu::initializeExamplePlaces() 
+{
+    examplePlaces.push_back(Place("Ciudad A", 10.0f, 5000, 4, 2, 100.0f, 200.0f));
+    examplePlaces.push_back(Place("Ciudad B", 15.0f, 3000, 5, 1, 150.0f, 250.0f));
+    examplePlaces.push_back(Place("Ciudad C", 20.0f, 8000, 3, 0, 200.0f, 300.0f));
+    examplePlaces.push_back(Place("Ciudad D", 8.0f, 2500, 4, 1, 120.0f, 210.0f));
+    examplePlaces.push_back(Place("Ciudad E", 12.0f, 4000, 4, 2, 130.0f, 220.0f));
+    examplePlaces.push_back(Place("Ciudad F", 5.0f, 1500, 5, 3, 140.0f, 230.0f));
+    examplePlaces.push_back(Place("Ciudad G", 18.0f, 6000, 3, 1, 160.0f, 260.0f));
+    examplePlaces.push_back(Place("Ciudad H", 25.0f, 9000, 4, 0, 170.0f, 270.0f));
+    examplePlaces.push_back(Place("Ciudad I", 30.0f, 10000, 3, 2, 180.0f, 280.0f));
+    examplePlaces.push_back(Place("Ciudad J", 6.0f, 2000, 4, 1, 190.0f, 290.0f));
 }

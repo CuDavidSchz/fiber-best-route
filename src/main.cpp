@@ -6,41 +6,37 @@ FIBER - BEST - ROUTE - TRACER
 
 */
 
-using namespace std;
-
 // Libraries
-
 #include <iostream>
-#include <vector>
-#include <string>
-#include <algorithm>
-
 
 // Headers
-
 #include "../include/Menu.hpp"
-#include "../include/Place.hpp"
 
-#include "../include/Example.hpp" //For testing
+using namespace std;
 
-// Main Storage
-
-vector<Place*> place_data;
-
-
-int main() {
-    Menu menu; 
+int main() 
+{
+    Menu menu;
     int choice;
-    std::cout << "Ahuevo funciona" << std::endl;
+    bool exit = false;
 
-   do {
+    while (!exit) 
+    {
         menu.display();
-        std::cin >> choice;
-        menu.processInput(choice);
-    } while (choice != 0);
- 
+        while (!(cin >> choice)) 
+        {
+            cout << "Entrada inválida. Por favor, ingrese un número: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
 
+        if (choice == 4) 
+        {
+            exit = true;
+        }
+
+        menu.processInput(choice);
+    }
 
     return 0;
-}  
- 
+};

@@ -1,55 +1,54 @@
-#ifndef Menu_hpp
-#define Menu_hpp
 
+using namespace std;
+
+#ifndef MENU_HPP
+#define MENU_HPP
 
 // Libraries
+#include <vector>
+#include "Place.hpp"
+#include "Calculations.hpp"
 
-#include <iostream>
-
-// Headers
-
-class Menu {
-    
+class Menu 
+{
     public:
 
     /*
         Constructor
         ----------------------------------------------------------------------------
     */
-        Menu();
+        Menu(); 
 
     /*
-        Show Menu
+        Additionals
         ----------------------------------------------------------------------------
     */
-        void display();
-
-    /*
-        Process the user selection
-        ----------------------------------------------------------------------------
-    */
+        void display();             
         void processInput(int choice); 
-
 
     private:
 
-    /*
-        Option 1
+        vector<Place> customPlaces;  
+        vector<Place> examplePlaces;
+        
+        /*
+        OPTIONS
         ----------------------------------------------------------------------------
-    */
-        void option1();
+        */
+    
+        void optionCreatePlaces();        
+        void optionBestDeployment();      
+        void optionModifyCustomPlaces();  
 
-    /*
-        Option 2
+        /*
+        Additionals
         ----------------------------------------------------------------------------
-    */
-        void option2();
-
-    /*
-        Option 3
-        ----------------------------------------------------------------------------
-    */
-        void option3();
+        */
+        void addPlace(std::vector<Place>& places);
+        void displayPlaces(const std::vector<Place>& places);
+        void removePlace(std::vector<Place>& places);
+        void performCalculations(std::vector<Place>& places);
+        void initializeExamplePlaces();
 };
 
-#endif
+#endif 
