@@ -33,23 +33,43 @@ float Calculations::calculateDistance(const Place& place1, const Place& place2)
 */
 void Calculations::calcNPD(vector<Place>& places) 
 {
-    for (size_t i = 0; i < places.size(); i++) 
+    // Create a copy
+    vector<Place*> placePointers;
+    for (auto& place : places)
     {
-        float minDistance = numeric_limits<float>::max();  // Initial value
-        
-        for (size_t j = 0; j < places.size(); j++) 
-        {
-            if (i != j) // Prevents calculating distance with itself
-            {  
-                float distance = calculateDistance(places[i], places[j]);
-                if (distance < minDistance) 
-                {
-                    minDistance = distance;
-                }
-            }
-        }
-        places[i].setNear_Place_Dist(minDistance);
+        placePointers.push_back(&place);
     }
+
+    // Build KD Tree
+    KDTree kdTree;
+    kdTree.buildTree(placePointers);
+
+    // Find the Nearest Neighbour for each place
+    for (auto& place : places)
+    {
+        float bestDist = numeric_limits<float>::max();
+        KDTreeNode* bestNode = NULL;
+
+        kdTree.nearestNeighbor(kdTree.root, &place, 0, bestNode, bestDist);
+
+        // Set the NPD to the place
+        if (bestNode != NULL)
+        {
+            place.setNear_Place_Dist(bestDist);
+        }
+        else
+        {
+            // If the node has not leafs, the npd is 0
+            place.setNear_Place_Dist(0.0f);
+        }
+    }
+    
+    // Depuration
+    for (auto& place : places)
+    {
+        cout << "Lugar: " << place.getPlace_name() << ", NPD: " << place.getNear_Place_Dist() << endl;
+    }
+
 }
 
 /*

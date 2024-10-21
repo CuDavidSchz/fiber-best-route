@@ -4,9 +4,13 @@ using namespace std;
 // Libraries
 #include <iostream>
 #include <limits>
+#include <fstream>
+#include <sstream>
+
 
 // Headers
 #include "../include/Menu.hpp"
+#include "../include/KDTree.hpp"
 
 
 /*
@@ -22,14 +26,16 @@ Menu::Menu()
     Shows menu options
     ---------------------------------------------------------------------
 */
-void Menu::display() {
+void Menu::display() 
+{
     cout << "=========================" << endl;
     cout << "        M E N Ú          " << endl;
     cout << "=========================" << endl;
     cout << "1. Crear una lista de lugares" << endl;
     cout << "2. Crear mejor ruta de despliegue" << endl;
     cout << "3. Modificar la lista personalizada" << endl;
-    cout << "4. Salir" << endl;
+    cout << "4. Cargar lugares desde un archivo" << endl; 
+    cout << "5. Salir" << endl;
     cout << "Seleccione una opción: ";
 }
 
@@ -39,7 +45,7 @@ void Menu::display() {
 */
 void Menu::processInput(int choice) 
 {
-    switch(choice) 
+    switch(choice)
     {
         case 1:
             optionCreatePlaces();
@@ -51,6 +57,9 @@ void Menu::processInput(int choice)
             optionModifyCustomPlaces();
             break;
         case 4:
+            optionLoadPlacesFromFile(); // Nueva opción
+            break;
+        case 5:
             cout << "Gracias por usar el programa. ¡Hasta luego!" << endl;
             break;
         default:
@@ -228,16 +237,87 @@ void Menu::optionModifyCustomPlaces()
 }
 
 /*
+    Option 4 : Load places from a file
+    ---------------------------------------------------------------------
+*/
+void Menu::optionLoadPlacesFromFile()
+{
+    cout << "=== Cargar lugares desde un archivo ===" << endl;
+    loadPlacesFromFile(customPlaces);
+}
+
+/*
     AUXILIARY METHODS
     ---------------------------------------------------------------------
 */
+
+/*
+    Files
+    ---------------------------------------------------------------------
+*/
+
+void Menu::loadPlacesFromFile(vector<Place>& places)
+{
+    string filename;
+    cout << "Ingrese el nombre del archivo (con extensión): ";
+    cin >> filename;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    ifstream inputFile(filename.c_str());
+
+    if (!inputFile)
+    {
+        cerr << "No se pudo abrir el archivo: " << filename << endl;
+        // Return to menu
+        return; 
+    }
+
+    places.clear();
+
+    string line;
+    while (getline(inputFile, line))
+    {
+        // Bank of variables
+        string name;
+        float nodeDistance;
+        int population;
+        int pplPerHouse;
+        int competitors;
+        float x, y;
+
+        istringstream ss(line);
+
+        // Read data
+        if (getline(ss, name, ',') &&
+            ss >> nodeDistance && ss.get() &&
+            ss >> population && ss.get() &&
+            ss >> pplPerHouse && ss.get() &&
+            ss >> competitors && ss.get() &&
+            ss >> x && ss.get() &&
+            ss >> y)
+        {
+            // Create and add the place
+            Place newPlace(name, nodeDistance, population, pplPerHouse, competitors, x, y);
+            places.push_back(newPlace);
+        }
+        else
+        {
+            cerr << "Error al leer la línea: " << line << endl;
+        }
+    }
+
+    inputFile.close();
+    cout << "Lugares cargados exitosamente desde " << filename << endl;
+    return;
+}
+
 /*
     Add another place
     ---------------------------------------------------------------------
 */
 void Menu::addPlace(vector<Place>& places) 
 {
-    cin.ignore();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clean
 
     // Variable bank
     string name;

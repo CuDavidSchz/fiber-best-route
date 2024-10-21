@@ -10,6 +10,7 @@ using namespace std;
 
 // Headers
 #include "Place.hpp"
+#include "KDTree.hpp"
 
 
 

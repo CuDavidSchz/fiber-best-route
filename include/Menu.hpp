@@ -39,6 +39,7 @@ class Menu
         void optionCreatePlaces();        
         void optionBestDeployment();      
         void optionModifyCustomPlaces();  
+        void optionLoadPlacesFromFile(); 
 
         /*
         Additionals
@@ -49,6 +50,13 @@ class Menu
         void removePlace(std::vector<Place>& places);
         void performCalculations(std::vector<Place>& places);
         void initializeExamplePlaces();
+
+        /*
+        Files
+        ----------------------------------------------------------------------------
+        */
+        void loadPlacesFromFile(vector<Place>& places);
+
 };
 
 #endif 

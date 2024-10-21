@@ -30,7 +30,7 @@ int main()
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
 
-        if (choice == 4) 
+        if (choice == 5) 
         {
             exit = true;
         }
