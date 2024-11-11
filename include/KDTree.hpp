@@ -26,4 +26,4 @@ public:
     void destroyTree(KDTreeNode* node);
 };
 
-#endif // KDTREE_HPP
+#endif

@@ -21,4 +21,4 @@ public:
     {}
 };
 
-#endif // KDTREENODE_HPP
+#endif

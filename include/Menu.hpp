@@ -35,11 +35,18 @@ class Menu
         OPTIONS
         ----------------------------------------------------------------------------
         */
-    
-        void optionCreatePlaces();        
-        void optionBestDeployment();      
+       
+       // Option 1
+        void optionCreatePlaces();  
+                // Option 1.1
+                void optionLoadPlacesFromFile(); 
+       
+        // Option 2      
+        void optionBestDeployment(); 
+
+        // Option 3     
         void optionModifyCustomPlaces();  
-        void optionLoadPlacesFromFile(); 
+
 
         /*
         Additionals
@@ -56,6 +63,7 @@ class Menu
         ----------------------------------------------------------------------------
         */
         void loadPlacesFromFile(vector<Place>& places);
+        void exportBestRoute(vector<Place>& places);
 
 };
 

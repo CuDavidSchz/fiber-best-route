@@ -34,8 +34,7 @@ void Menu::display()
     cout << "1. Crear una lista de lugares" << endl;
     cout << "2. Crear mejor ruta de despliegue" << endl;
     cout << "3. Modificar la lista personalizada" << endl;
-    cout << "4. Cargar lugares desde un archivo" << endl; 
-    cout << "5. Salir" << endl;
+    cout << "4. Salir" << endl;
     cout << "Seleccione una opción: ";
 }
 
@@ -57,9 +56,6 @@ void Menu::processInput(int choice)
             optionModifyCustomPlaces();
             break;
         case 4:
-            optionLoadPlacesFromFile(); // Nueva opción
-            break;
-        case 5:
             cout << "Gracias por usar el programa. ¡Hasta luego!" << endl;
             break;
         default:
@@ -73,20 +69,51 @@ void Menu::processInput(int choice)
 */
 void Menu::optionCreatePlaces() 
 {
-    cout << "=== Crear una lista de lugares ===" << endl;
+        int Option_1_choice; 
+        char continueAdding;
+
+        cout << endl;
+        cout << "=== Crear una lista de lugares ===" << endl;
+        cout << endl;
+        cout << "1. Crear desde cero" << endl; 
+        cout << "2. Cargar lugares desde un archivo" << endl;
+        cout << "3. Regresar al menu" << endl;
+        cout << "Selecciona una opción: ";
 
 
-    char continueAdding = 's';
+        cin >> Option_1_choice; 
 
-
-    while (continueAdding == 's' || continueAdding == 'S') 
+    switch(Option_1_choice)
     {
-        addPlace(customPlaces);
-        cout << "¿Desea agregar otro lugar? (s/n): ";
-        cin >> continueAdding;
+        case 1: 
+            // Add places manually
+            continueAdding = 's';
+            while (continueAdding == 's' || continueAdding == 'S') 
+            {
+                addPlace(customPlaces);
+                cout << "¿Desea agregar otro lugar? (s/n): ";
+                cin >> continueAdding;
+            }
+            break;
+
+        case 2:
+            // Load places from file
+            optionLoadPlacesFromFile();
+            break;
+
+        case 3:
+            cout << endl;
+            cout << "== Regresando al menú principal ==" << endl;
+            cout << endl;
+            break;
+
+        default:
+            cout << endl;
+            cout << "Opción inválida. Por favor, intente de nuevo." << endl;
+            cout << endl;
+            optionCreatePlaces();
     }
 }
-
 /*
     Option 2 : Find the best route
     ---------------------------------------------------------------------
@@ -188,7 +215,20 @@ void Menu::optionBestDeployment()
         // Ask for another iteration with another alpha
         cout << "¿Desea probar con otro valor de alpha? (s/n): ";
         cin >> continueAlpha;
+
+        // Save files
+        char saveChoice;
+        cout << "¿Desea guardar los resultados en un archivo? (s/n): ";
+        cin >> saveChoice;
+
+        if (saveChoice == 's' || saveChoice == 'S') 
+        {
+            exportBestRoute(placesCopy);
+            cout << "Los resultados se han guardado en 'Ruta.txt'." << endl;
+        }
     }
+
+
 }
 
 /*
@@ -242,7 +282,9 @@ void Menu::optionModifyCustomPlaces()
 */
 void Menu::optionLoadPlacesFromFile()
 {
+    cout << endl;
     cout << "=== Cargar lugares desde un archivo ===" << endl;
+    cout << endl;
     loadPlacesFromFile(customPlaces);
 }
 
@@ -252,7 +294,7 @@ void Menu::optionLoadPlacesFromFile()
 */
 
 /*
-    Files
+    Load Files
     ---------------------------------------------------------------------
 */
 
@@ -309,6 +351,35 @@ void Menu::loadPlacesFromFile(vector<Place>& places)
     inputFile.close();
     cout << "Lugares cargados exitosamente desde " << filename << endl;
     return;
+}
+
+/*
+    Export Files
+    ---------------------------------------------------------------------
+*/
+void Menu::exportBestRoute(vector<Place>& places)
+{
+    ofstream fileBestRoute("Ruta.txt", ios::out);
+
+    if (fileBestRoute.fail())
+    {
+        cout << "No se pudo abrir el archivo para guardar la ruta." << endl;
+        return;
+    }
+
+    fileBestRoute << "=== Resultados de la ruta de despliegue ===" << endl;
+
+    for (const auto& place : places)
+    {
+        fileBestRoute << place.getPlace_name() 
+                    << " - PI: " << place.getProfit_Index()
+                    << ", Node Distance: " << place.getNode_distance()
+                    << ", NPD: " << place.getNear_Place_Dist() 
+                    << " km" << endl;
+    }
+
+    fileBestRoute.close();
+    cout << "Los resultados se han guardado correctamente." << endl;
 }
 
 /*
