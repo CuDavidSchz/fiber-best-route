@@ -12,3 +12,7 @@ main.dSYM/
 # Archivo ejecutable
 
 program
+
+# Archivo output
+
+Ruta.txt
