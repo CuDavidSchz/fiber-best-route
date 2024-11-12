@@ -1,4 +1,5 @@
 
+
 # Proyecto: Fiber Best Route Sheet
 
   
@@ -228,6 +229,18 @@ Se hizo implementó una estructura de datos de tipo _DK Tree_ que permite el ord
 2. **Recibir documentos** : Ahora se pueden cargar archivos de texto para agregar la lista personalizada de los lugares. Se hizo uso de la librería _fstream_. 
 
 3. **Misceláneo** : Los demás cambios son en el menú para adaptarlo a la nueva opción _"4.- Cargar lugares desde un archivo"_ y la forma en que se procesa el constructor del DK Tree al momento de elegir la opción _"2.- Crear mejor ruta de despliegue"_.
+<br>
+
+<br>
+
+## Descripción del avance 3
+
+Este avance incluye la reestructuración del menú y la capacidad de exportar archivos de texto con la mejor ruta de despliegue recomendada. 
+### Cambios sobre el segundo avance
+1. Las opciones del menú fueron reordenadas para tener más coherencia. Cargar una lista de lugares desde un archivo es ahora una extensión del caso de uso de "Crear una lista de lugares". 
+2. La opción de exportar el archivo con la sugerencia de la ruta de despliegue fue agregada como una extensión al caso de uso de "Crear mejor ruta de despliegue" al final de dicho caso.
+
+
 
 ## Instrucciones para compilar el avance de proyecto
 Ejecuta el siguiente comando en la terminal:
@@ -290,7 +303,7 @@ Ciudad C,20.0,8000,3,0,200.0,300.0
 
 •  El archivo debe estar en el mismo directorio desde el cual se ejecuta el programa o se debe proporcionar la ruta completa al archivo.
 
-Si deseas probar con el archivo de prueba solo debes escribir: _example.txt_ en la opción 4.
+Si deseas probar con el archivo de prueba solo debes escribir: _example.txt_ en la opción 1 y escoger "2.- Cargar lugares desde un archivo".
 
 ## Descripción de las salidas del avance de proyecto
 El programa proporciona los siguientes resultados:
@@ -324,6 +337,9 @@ Dado el siguiente resultado tiene sentido basado en las reglas que se usaron en 
 
 Conviene conectar primero la Ciudad C porque no existe ningún competidor y en la zona más competitiva hay 5, por lo que conviene dejarla hasta el final de la conexión.
 
+**Archivos exportados**:
+Ahora es posible guardar la lista en un archivo de tipo texto que guardará en cada linea un resultado como la tabla anterior. 
+
 ## Desarrollo de competencias
 
 ### SICT0301: Evalúa los componentes
@@ -353,6 +369,45 @@ El árbol se construye recursivamente cada vez que se agrega un nodo, por lo que
 
 Una estructura que no cambie fue el uso de vectores. El KD Tree me ayudó a mejorar la operación de _calcNPD()_ pero no era óptimo para realizar el en el cálculo del PI y en el ordenamiento de la salida, necesitaba un recorrido iterativo y era más sencillo de implementar y entender con un vector.
 
+#### Hace un análisis de complejidad correcto y completo para todos los demás componentes del programa y determina la complejidad final del programa.
+
+Las funciones más importantes del programa ya han sido analizadas con anterioridad, sin embargo existen otro métodos que son más sencillos y están presentes en partes como el menú, en la carga y exportación de datos. 
+
+**Métodos adicionales**: 
+En el menú: 
+
+1. **Display**: $O(1)$
+	Solo despliega el menú que se ha escrito.
+2. **ProcessInput**: $O(1)$
+	Procesa la opción del usuario.
+3. **CreatePlaces**: $O(n)$
+	Este combina el constructor de los lugares para agregarlos al vector designado para guardar los lugares, por lo que se repite las veces que el usuario necesite. 
+4. **BestDeployment**: $O(n \log n)$
+	Debido a que hace uso de la estructura de datos KD Tree su complejidad es de $O(n \log n)$ porque descarta las ramas que definitivamente no prometen un resultado cercano al deseado. Sin embargo, como el árbol no es AVL se puede degenerar si las coordenadas difieren mucho entre si dando como resultado una complejidad en el peor caso de $O(n^2)$. Sin embargo, para ese punto tendría que ser muy obvio que lo lugares están tan separados que perdería el sentido usar el programa para una ruta ya que el gasto de recursos sería igual a conectar cada lugar uno por uno. 
+	
+	Para este caso, sería más recomendable usar grafos con una matriz de adyacencia para buscar la ruta más corta en el orden en que los puntos desean conectarse, sin embargo debido al tiempo de desarrollo de este proyecto, el KD Tree era la estructura de datos óptima para esta tarea. 
+
+5. **ModifyCustomPlaces**: $O(n)$
+	El usuario modifica, elimina o añade lugares las veces que quiera.
+
+6. **LoadPlacesFromFile**: $O(n)$
+	Debido a que es una función iterativa, se ejecutará n veces según cuantos registros tenga el archivo que se desea agregar 
+
+7. **exportBestRoute**:  $O(n)$
+	Similar a cargar datos, este método se ejecuta n veces según sea el número de lugares que se han ordenado en el vector de lugares. 
+
+8. **initializeExamplePlaces**: $O(1)$
+	Este método inicializa el vector de ejemplo cada vez que se inicia el programa por lo que solo se realiza una sola vez. 
+
+#### COMPLEJIDAD FINAL DEL PROGRAMA: 
+
+El método más complejo del programa es la comparación entre lugares para conocer su distancia más corta entre sí, por lo que podríamos tomar ambos escenarios; peor $O(n^2)$ y promedio $O(n \log n)$,  como la complejidad final. 
+¿Por qué? Porque en un escenario real sería muy complicado que se diera el peor ya que deben estar muy separados los lugares para que se diera el peor escenario y en ese caso, la diferencia de distancia sería tanta que podría ser vista la inneficiencia lógica de usar el programa para tratar de encontrar la mejor ruta en lugares tan separados. Por lo que la mayor parte del tiempo, el programa tendrá una complejidad de $O(n \log n)$.
+
+
+	
+
+
 ### SICT0302: Toma decisiones
 #### Selecciona un algoritmo de ordenamiento adecuado al problema y lo usa correctamente.
 En base a las instrucciones dadas, el algoritmo de ordenamiento ha sido implementado correctamente en el método **sortPlaces()**
@@ -363,6 +418,7 @@ porque automatiza tres ordenamientos por criterios diferentes (descritos anterio
 Aunque el algoritmo de ordenamiento se mantiene igual, el KD Tree y el método del vecino más cercano permite que el programa sea más escalable con grandes volúmenes de información porque su caso promedio es de una complejidad de $O(n \log n)$. Nota: La complejidad del método está detallada en el cambio 1 de este avance.
 
 Iba a ser muy complicado hacer una implementación con un árbol de búsqueda binaria si la formula para el PI seguía considerando el NPD. Podría haber modificado la fórmula y quedarme con el ordenamiento del árbol sólo por el PI y podía usar sin problemas un árbol de búsqueda binaría. Pero usar un árbol bidimensional para mejorar un método de cálculo de distancias parecía más interesante. 
+
 
 ### SICT0303: Implementa acciones científicas
 #### Implementa mecanismos para consultar información de las estructras correctos.
@@ -376,3 +432,9 @@ Si bien no contempla un método para traer un nodo en específico, la naturaleza
 Para esta competencia solo fue necesario entender cómo funcionaba la librería estándar de fstream para la lectura de datos. Posteriormente, era cuestión de usar un ciclo While para leer las líneas del archivo y asignar cada valor separado por comas a un atributo del constructor de los objetos de tipo Place y agregarlos al vector de _customPlaces_. 
 
 Como se mencionó anteriormente, el vector se transforma en un árbol cuando el usuario haya terminado de personalizar la lista de los lugares que desea comparar, por lo que los valores de los archivos se implementan a un vector para facilitar las cosas.
+
+### Implementa mecanismos de escritura de archivos para guardar los datos  de las estructuras de manera correcta
+
+Para esta competencia fue necesario aprender a usar la otra parte de la librería de fstream para la escritura de archivos. Para esto solo es necesario abrir el archivo; en caso de que no exista lo crea desde cero, después iterar sobre el vector de lugares en donde se ha guardado la lista ordenada y extraer los atributos de cada lugar con los getters para ser escritos en el archivo. 
+
+Cómo área de mejora se podría implementar que cada archivo tenga un número al final para no sobre escribir el mismo archivo (algo así como las descargas en internet que agregan un número al final aunque sea el mismo archivo), sin embargo no supe como lograr eso aún. 
